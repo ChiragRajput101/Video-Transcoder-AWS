@@ -36,9 +36,26 @@ async function init() {
             if (!Body) {
                 continue
             }
-
+            
+            // storing in the the data parsed from the message into the S3Event structure
             const event = JSON.parse(Body) as S3Event
+            // S3EventRecord holds the entire message
+            
+            // ignoring test events
+            if ("Service" in event && "Event" in event) {
+                if (event.Event === "s3:TestEvent") continue
+            }
+
             // spin up the docker container
+            // Records: S3EventRecord[]
+            for (const record of event.Records) {
+                const {s3} = record
+                const {
+                    bucket,
+                    object: {key}
+                } = s3
+                
+            }
             // delete message
         }
     }
